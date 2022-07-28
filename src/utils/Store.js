@@ -1,9 +1,12 @@
 import { createContext, useReducer } from "react";
+import Cookies from "js-cookie";
 
 export const Store = createContext();
 
 const initialState = {
-  cart: { cartItems: [] },
+  cart: Cookies.get("cart")
+    ? JSON.parse(Cookies.get("cart"))
+    : { cartItems: [] },
 };
 
 function reducer(state, action) {
@@ -14,10 +17,19 @@ function reducer(state, action) {
         (item) => item.slug === newItem.slug
       );
       const cartItems = existItem
-        ? state.cart.cartItems.map((item) =>
-            item.name === existItem.name ? newItem : item
+        ? state.cart.cartItems.map(
+            (item) => (item.name === existItem.name ? newItem : item) //updates the product with new quantity if the product is already in the cart
           )
-        : [...state.cart.cartItems, newItem];
+        : [...state.cart.cartItems, newItem]; //or add a new product when it is not in the cart
+      Cookies.set("cart", JSON.stringify({ ...state.cart, cartItems })); // we need to convert to string before saving into cookie
+      return { ...state, cart: { ...state.cart, cartItems } }; // returns the updated state
+    }
+    case "CART_REMOVE_ITEM": {
+      const cartItems = state.cart.cartItems.filter(
+        (item) => item.slug !== action.payload.slug
+      );
+      Cookies.set("cart", JSON.stringify({ ...state.cart, cartItems })); // we need to convert to string before saving into cookie
+
       return { ...state, cart: { ...state.cart, cartItems } };
     }
     default:
