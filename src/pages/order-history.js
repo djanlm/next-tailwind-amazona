@@ -33,13 +33,11 @@ function OrderHistoryScreen() {
         dispatch({ type: "FETCH_FAIL", payload: getError(err) });
       }
     };
-
     fetchOrders();
   }, []);
-
   return (
     <Layout title="Order History">
-      <h1 className="text-xl">Order History</h1>
+      <h1 className="mb-4 text-xl">Order History</h1>
       {loading ? (
         <div>Loading...</div>
       ) : error ? (
@@ -62,7 +60,7 @@ function OrderHistoryScreen() {
                 <tr key={order._id} className="border-b">
                   <td className=" p-5 ">{order._id.substring(20, 24)}</td>
                   <td className=" p-5 ">{order.createdAt.substring(0, 10)}</td>
-                  <td className=" p-5 ">{order.totalPrice}</td>
+                  <td className=" p-5 ">${order.totalPrice}</td>
                   <td className=" p-5 ">
                     {order.isPaid
                       ? `${order.paidAt.substring(0, 10)}`
@@ -74,7 +72,7 @@ function OrderHistoryScreen() {
                       : "not delivered"}
                   </td>
                   <td className=" p-5 ">
-                    <Link href={`/order/${order._id}`}>
+                    <Link href={`/order/${order._id}`} passHref>
                       <a>Details</a>
                     </Link>
                   </td>
