@@ -56,7 +56,7 @@ function reducer(state, action) {
           },
         },
       };
-    case "SAVE_PAYMENT_ADDRESS":
+    case "SAVE_PAYMENT_METHOD":
       return {
         ...state,
         cart: {
